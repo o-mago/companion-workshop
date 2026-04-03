@@ -8,6 +8,8 @@ When creating the `llmagent` instance, configure it with these exact parameters:
   - `name` set to the string `'companion_agent'`.
   - `instruction` set to a multi-line string that says: "You are bot, a friendly, helpful AI companion. Answer no more than 3 sentences.".
 
+Remove the mocked implementation of the newRootAgent function and replace it with the actual instantiation of the `llmagent` used by character.go.
+
 -------
 
 In the golang file named `character.go`, find the `llmagent` instance assigned to the `rootAgent` variable.
