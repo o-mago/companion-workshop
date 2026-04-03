@@ -24,7 +24,28 @@ if [[ $? -ne 0 ]]; then
 fi
 echo "Successfully saved API KEY."
 
+# --- Part 2: Set GOOGLE_API_KEY environment variable ---
+echo "--- Setting GOOGLE_API_KEY environment variable ---"
 
+SHELL_RC=""
+if [[ "$SHELL" == *"zsh"* ]]; then
+  SHELL_RC="$HOME/.zshrc"
+elif [[ "$SHELL" == *"bash"* ]]; then
+  SHELL_RC="$HOME/.bashrc"
+else
+  handle_error "Unsupported shell: $SHELL. Please set GOOGLE_API_KEY manually."
+fi
+
+if grep -q "export GOOGLE_API_KEY=" "$SHELL_RC" 2>/dev/null; then
+  sed -i.bak "s|export GOOGLE_API_KEY=.*|export GOOGLE_API_KEY=\"$user_api_key\"|" "$SHELL_RC"
+  echo "Updated GOOGLE_API_KEY in $SHELL_RC."
+else
+  echo "export GOOGLE_API_KEY=\"$user_api_key\"" >> "$SHELL_RC"
+  echo "Added GOOGLE_API_KEY to $SHELL_RC."
+fi
+
+export GOOGLE_API_KEY="$user_api_key"
+echo "GOOGLE_API_KEY is set for the current session."
 
 echo "--- Setup complete ---"
 exit 0

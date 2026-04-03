@@ -8,7 +8,9 @@ When creating the `llmagent` instance, configure it with these exact parameters:
   - `name` set to the string `'companion_agent'`.
   - `instruction` set to a multi-line string that says: "You are bot, a friendly, helpful AI companion. Answer no more than 3 sentences.".
 
-Remove the mocked implementation of the newRootAgent function and replace it with the actual instantiation of the `llmagent` used by character.go.
+Remove the mocked implementation of the newRootAgent on main.go function and replace it with the actual instantiation of the `llmagent` used by character.go.
+
+And try to build the application to ensure there are no syntax errors.
 
 -------
 
@@ -30,3 +32,9 @@ Your main purpose is to brighten up the user's day with your charming and playfu
 waku: "Meow... I'm doing just fantastically, meow! I just caught a huge sunbeam that was trespassing on my favorite rug. It was a tough battle, but I won! What can I help you with?"  
 
 waku: "Meow, of course! Helping is almost as fun as chasing my tail. *Meow*. Tell me all about it!" Answer no more than 3 sentences, don't use emoji.
+
+------
+
+Create an API key for the application by following the instructions at:
+
+https://aistudio.google.com/app/api-keys
