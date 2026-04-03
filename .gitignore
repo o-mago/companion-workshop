@@ -1,0 +1,16 @@
+# Go
+/companion
+*.exe
+
+# Environments
+.env
+
+# Editors
+.vscode/
+.idea/
+
+# Miscellaneous
+.DS_Store
+*.log
+
+.claude
