@@ -94,7 +94,7 @@ func main() {
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /", handleIndex)
 	mux.HandleFunc("POST /chat", handleChat)
-	mux.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
+	mux.Handle("GET /static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
 	log.Println("Server listening on :5000")
 	log.Fatal(http.ListenAndServe(":5000", mux))
