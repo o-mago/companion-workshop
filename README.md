@@ -1,7 +1,7 @@
-Generate the Golang code for a file named character.py.
+Generate the Golang code for a file named character.go.
 
 The code must import `llmagent` from `google.golang.org/adk/agent/llmagent`. It should also import `google.golang.org/adk/model/gemini` and `google.golang.org/adk/agent` and `context`.
-Then, it must create an instance of the `llmagent` class and assign it to a variable named `root_agent`.
+Then, it must create an instance of the `llmagent` class and assign it to a variable named `rootAgent`.
 
 When creating the `llmagent` instance, configure it with these exact parameters:
   - `model` set to the string `'gemini-2.5-flash'`.

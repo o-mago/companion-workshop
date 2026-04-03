@@ -65,6 +65,10 @@ func handleChat(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(chatResponse{Response: sb.String()})
 }
 
+func newRootAgent(_ context.Context) (agent.Agent, error) {
+	return agent.New(agent.Config{})
+}
+
 func main() {
 	ctx := context.Background()
 
