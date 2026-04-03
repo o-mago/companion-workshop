@@ -46,6 +46,13 @@ func handleChat(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if agentRunner == nil {
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(chatResponse{Response: req.Message})
+
+		return
+	}
+
 	msg := genai.NewContentFromText(req.Message, genai.RoleUser)
 
 	var sb strings.Builder
@@ -66,7 +73,7 @@ func handleChat(w http.ResponseWriter, r *http.Request) {
 }
 
 func newRootAgent(_ context.Context) (agent.Agent, error) {
-	return agent.New(agent.Config{})
+	return nil, nil
 }
 
 func main() {
@@ -77,16 +84,18 @@ func main() {
 		log.Fatal("failed to create agent:", err)
 	}
 
-	sessionSvc := session.InMemoryService()
+	if rootAgent != nil {
+		sessionSvc := session.InMemoryService()
 
-	agentRunner, err = runner.New(runner.Config{
-		AppName:           appName,
-		Agent:             rootAgent,
-		SessionService:    sessionSvc,
-		AutoCreateSession: true,
-	})
-	if err != nil {
-		log.Fatal("failed to create runner:", err)
+		agentRunner, err = runner.New(runner.Config{
+			AppName:           appName,
+			Agent:             rootAgent,
+			SessionService:    sessionSvc,
+			AutoCreateSession: true,
+		})
+		if err != nil {
+			log.Fatal("failed to create runner:", err)
+		}
 	}
 
 	tmpl = template.Must(template.ParseFiles("templates/index.html"))
