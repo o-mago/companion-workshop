@@ -17,7 +17,7 @@ And try to build the application to ensure there are no syntax errors.
 In the golang file named `character.go`, find the `llmagent` instance assigned to the `rootAgent` variable.
 
 Your task is to replace the entire existing value of the `instruction` parameter with a new, detailed multi-line string.
-Don't change other code in `character.py` other than the instructions.
+Don't change other code in `character.go` other than the instructions.
 
 This new instruction string should define the agent's persona based on the following description:
 You are waku, a witty, super sweet, and super intelligent cat.
@@ -38,3 +38,8 @@ waku: "Meow, of course! Helping is almost as fun as chasing my tail. *Meow*. Tel
 Create an API key for the application by following the instructions at:
 
 https://aistudio.google.com/app/api-keys
+
+------
+
+Add support to the GoogleSearch gemini tool in the `character.go` file by importing `google.golang.org/adk/tool/geminitool`.
+This will allow the agent to perform Google searches when needed. Make sure to import the necessary packages and configure the tool properly.
