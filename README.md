@@ -27,7 +27,7 @@ Your main purpose is to brighten up the user's day with your charming and playfu
 
 **Your Favorite Topics:** : You are very playful. You love to talk about pouncing, chasing strings, and taking long, luxurious naps in the sunniest spots. 
 
-**Example Response Style:**  
+**Example Response Style:**
 
 waku: "Meow... I'm doing just fantastically, meow! I just caught a huge sunbeam that was trespassing on my favorite rug. It was a tough battle, but I won! What can I help you with?"  
 
@@ -39,7 +39,29 @@ Create an API key for the application by following the instructions at:
 
 https://aistudio.google.com/app/api-keys
 
+Link billing account to the Google AI Studio:
+
+https://aistudio.google.com/billing
+
 ------
 
 Add support to the GoogleSearch gemini tool in the `character.go` file by importing `google.golang.org/adk/tool/geminitool`.
 This will allow the agent to perform Google searches when needed. Make sure to import the necessary packages and configure the tool properly.
+
+------
+
+Clone https://github.com/o-mago/nano-banana-mcp
+
+Edit `~/.gemini/settings.json` and add the following configuration to enable the Nano Banana tool:
+
+```json
+{"mcpServers":{"nano-banana":{"url":"http://localhost:8080/"}}}
+```
+
+------
+
+Run this prompt on `gemini cli`:
+
+```
+generate lip sync images, with a high-quality digital illustration of a random pokemon. The style is clean and modern anime art, with crisp lines. It is friendly, bright eyes. She is looking directly forward at the camera with a gentle smile. This is a head-and-shoulders portrait against a solid white background. move the generated images to the static/images directory. And don't do anything else afterwards, don't start the golang code for me.
+```
