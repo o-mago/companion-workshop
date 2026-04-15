@@ -35,6 +35,11 @@ waku: "Meow, of course! Helping is almost as fun as chasing my tail. *Meow*. Tel
 
 ------
 
+Paste the URL of your application, but add the following path to the end: /static/images/char-mouth-open.png. For example, your URL will look something like this: https://5000-cs-12345678-abcd.cs-region.cloudshell.dev/static/images/char-mouth-open.png
+Press Enter. You should see just the image of the character with its mouth open. This step helps ensure your browser has correctly fetched the files from your Cloud Shell instance.
+
+------
+
 Create an API key for the application by following the instructions at:
 
 https://aistudio.google.com/app/api-keys
