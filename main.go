@@ -105,6 +105,6 @@ func main() {
 	mux.HandleFunc("POST /chat", handleChat)
 	mux.Handle("GET /static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
-	log.Println("Server listening on :5000")
-	log.Fatal(http.ListenAndServe(":5000", mux))
+	log.Println("Server listening on :4010")
+	log.Fatal(http.ListenAndServe(":4010", mux))
 }

@@ -43,11 +43,16 @@ body {
 .character-viewer {
     text-align: center;
     padding: 1rem;
+    flex-shrink: 1;
+    min-height: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .character-viewer #character-image {
-    width: min(600px, 70vw);
-    height: min(600px, 70vw);
+    width: min(600px, 70vw, 45vh);
+    height: min(600px, 70vw, 45vh);
     border-radius: 50%;
     object-fit: cover;
 }
@@ -144,6 +149,11 @@ body {
 
     .character-viewer {
         padding: 0.5rem;
+    }
+
+    .character-viewer #character-image {
+        width: min(500px, 70vw, 40vh);
+        height: min(500px, 70vw, 40vh);
     }
 }
 
