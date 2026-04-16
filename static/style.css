@@ -16,7 +16,8 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    min-height: 100vh;
+    min-height: 100dvh;
 }
 
 .chat-container {
@@ -29,6 +30,7 @@ body {
     overflow: hidden;
     box-shadow: 0 10px 30px rgba(0,0,0,0.2);
     height: 95vh;
+    height: 95dvh;
 }
 
 .chat-header {
@@ -44,8 +46,8 @@ body {
 }
 
 .character-viewer #character-image {
-    width: 600px;
-    height: 600px;
+    width: min(600px, 70vw);
+    height: min(600px, 70vw);
     border-radius: 50%;
     object-fit: cover;
 }
@@ -128,4 +130,52 @@ body {
 #send-button svg {
     width: 24px;
     height: 24px;
+}
+
+/* --- Responsive --- */
+
+/* Tablet and below */
+@media (max-width: 768px) {
+    .chat-container {
+        border-radius: 8px;
+        height: 98vh;
+        height: 98dvh;
+    }
+
+    .character-viewer {
+        padding: 0.5rem;
+    }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+    body {
+        align-items: stretch;
+    }
+
+    .chat-container {
+        border-radius: 0;
+        height: 100vh;
+        height: 100dvh;
+    }
+
+    .chat-header h1 {
+        font-size: 1.2rem;
+    }
+
+    .chat-input-area {
+        flex-wrap: wrap;
+        padding: 0.75rem;
+    }
+
+    #voice-select {
+        width: 100%;
+        height: 40px;
+        font-size: 0.85rem;
+    }
+
+    #text-input {
+        height: 40px;
+        font-size: 0.9rem;
+    }
 }
