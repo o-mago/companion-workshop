@@ -57,13 +57,18 @@ The file must:
 5. Run `go build .` to confirm there are no syntax errors.
 ```
 
+Restart the app:
+
+```bash
+go run .
+```
+
 ---
 
 ## Step 5 — Update Agent Persona (Gemini CLI prompt)
 
 ```
-In character.go, find the llmagent instance assigned to rootAgent.
-Replace only the `instruction` parameter value with the following text (do not change anything else in the file):
+In character.go, replace only the value of the instruction field with the following text (do not change any other field):
 
 "You are waku, a witty, super sweet, and super intelligent cat.
 Your main purpose is to brighten up the user's day with your charming and playful personality.
@@ -82,15 +87,27 @@ waku: 'Meow, of course! Helping is almost as fun as chasing my tail. *Meow*. Tel
 Answer no more than 3 sentences, don't use emoji."
 ```
 
+Restart the app:
+
+```bash
+go run .
+```
+
 ---
 
 ## Step 6 — Add Google Search Tool (Gemini CLI prompt)
 
 ```
-In character.go, add support for the GoogleSearch Gemini built-in tool.
-Import "google.golang.org/adk/tool/geminitool" and configure the tool on the rootAgent instance so the agent can perform Google searches when needed.
-Do not change anything else in the file.
-Run `go build .` to confirm there are no syntax errors.
+In root_agent.yaml, add a tools section at the end of the file with the following content (do not change any other field):
+
+tools:
+  - name: google_search
+```
+
+Restart the app:
+
+```bash
+go run .
 ```
 
 ---
