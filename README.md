@@ -98,10 +98,7 @@ go run .
 ## Step 6 — Add Google Search Tool (Gemini CLI prompt)
 
 ```
-In root_agent.yaml, add a tools section at the end of the file with the following content (do not change any other field):
-
-tools:
-  - name: google_search
+In character.go, add the google_search tool (do not change any other field)
 ```
 
 Restart the app:
