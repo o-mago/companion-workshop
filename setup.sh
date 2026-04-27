@@ -1,61 +1,33 @@
 #!/bin/bash
 
-# This script sets up the workshop environment:
-#   1. Saves your Google Cloud Project ID to ~/project_id.txt
-#   2. Saves your AI Studio API Key to ~/api_key.txt
-#   3. Exports all required Google Cloud environment variables
+# Reads saved credentials and exports all required Google Cloud environment
+# variables into the current shell session.
 #
-# IMPORTANT: This script must be SOURCED so the exported variables
-# are available in your current shell session.
+# IMPORTANT: Must be SOURCED so exports persist in your shell.
 # Usage: source ./setup.sh
 
-# --- Configuration ---
 PROJECT_FILE="$HOME/project_id.txt"
 API_KEY_FILE="$HOME/api_key.txt"
 GOOGLE_CLOUD_LOCATION="us-central1"
-# ---------------------
 
-# Using 'return' instead of 'exit' because this script must be sourced.
 handle_error() {
   echo "Error: $1"
   return 1
 }
 
-
-# --- Part 1: Google Cloud Project ID ---
-echo "--- Setting Google Cloud Project ID ---"
-
-read -p "Please enter your Google Cloud project ID: " user_project_id
-
-if [[ -z "$user_project_id" ]]; then
-  handle_error "No project ID was entered."
+if [[ ! -f "$PROJECT_FILE" ]]; then
+  handle_error "Project ID file not found. Run: bash ./save_credentials.sh"
   return 1
 fi
 
-echo "$user_project_id" > "$PROJECT_FILE" || { handle_error "Failed saving project ID."; return 1; }
-echo "Successfully saved project ID."
-
-
-# --- Part 2: AI Studio API Key ---
-echo ""
-echo "--- Setting AI Studio API Key ---"
-
-read -p "Please enter your AI Studio API Key: " user_api_key
-
-if [[ -z "$user_api_key" ]]; then
-  handle_error "No API Key was entered."
+if [[ ! -f "$API_KEY_FILE" ]]; then
+  handle_error "API Key file not found. Run: bash ./save_credentials.sh"
   return 1
 fi
 
-echo "$user_api_key" > "$API_KEY_FILE" || { handle_error "Failed saving API Key."; return 1; }
-echo "Successfully saved API Key."
+user_project_id=$(cat "$PROJECT_FILE")
+user_api_key=$(cat "$API_KEY_FILE")
 
-export GOOGLE_API_KEY="$user_api_key"
-echo "Exported GOOGLE_API_KEY."
-
-
-# --- Part 3: Google Cloud Environment Variables ---
-echo ""
 echo "--- Setting Google Cloud Environment Variables ---"
 
 echo "Checking gcloud authentication status..."
@@ -69,6 +41,9 @@ fi
 
 echo "Setting gcloud config project to: $user_project_id"
 gcloud config set project "$user_project_id" --quiet
+
+export GOOGLE_API_KEY="$user_api_key"
+echo "Exported GOOGLE_API_KEY."
 
 export PROJECT_ID=$(gcloud config get project)
 echo "Exported PROJECT_ID=$PROJECT_ID"

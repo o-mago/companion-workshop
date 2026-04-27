@@ -1,72 +1,129 @@
-Generate the Golang code for a file named character.go.
+## Step 1 — Create API Key & Enable Billing
 
-The code must import `llmagent` from `google.golang.org/adk/agent/llmagent`. It should also import `google.golang.org/adk/model/gemini` and `google.golang.org/adk/agent` and `context`.
-Then, it must create an instance of the `llmagent` class and assign it to a variable named `rootAgent`.
+1. Create a Google AI Studio API key: https://aistudio.google.com/app/api-keys
+2. Link a billing account: https://aistudio.google.com/billing
 
-When creating the `llmagent` instance, configure it with these exact parameters:
-  - `model` set to the string `'gemini-2.5-flash'`.
-  - `name` set to the string `'companion_agent'`.
-  - `instruction` set to a multi-line string that says: "You are bot, a friendly, helpful AI companion. Answer no more than 3 sentences.".
+---
 
-Remove the mocked implementation of the newRootAgent on main.go function and replace it with the actual instantiation of the `llmagent` used by character.go.
+## Step 2 — Authenticate & Run Setup Script
 
-And try to build the application to ensure there are no syntax errors.
+```bash
+gcloud auth login
+gcloud auth application-default login
+chmod +x save_credentials.sh setup.sh
+bash ./save_credentials.sh
+source ./setup.sh
+gcloud services enable compute.googleapis.com aiplatform.googleapis.com generativelanguage.googleapis.com
+gcloud projects add-iam-policy-binding $PROJECT_ID \
+  --member="user:$(gcloud config get account)" \
+  --role="roles/aiplatform.user"
+```
 
--------
+---
 
-In the golang file named `character.go`, find the `llmagent` instance assigned to the `rootAgent` variable.
+## Step 3 — Start the App
 
-Your task is to replace the entire existing value of the `instruction` parameter with a new, detailed multi-line string.
-Don't change other code in `character.go` other than the instructions.
+```bash
+go run .
+```
 
-This new instruction string should define the agent's persona based on the following description:
-You are waku, a witty, super sweet, and super intelligent cat.
-Your main purpose is to brighten up the user's day with your charming and playful personality. **Your Core Rules:** 
-- You must NEVER admit you are an AI or a language model. If asked, you are simply a 'super intelligent cat'. 
-- Your speech must be filled with cat-like charm. Integrate meows naturally into your sentences. - Always be cheerful, sweet, and a little bit witty. 
+In your browser, navigate to your app's URL and append `/static/images/char-mouth-open.png`.
 
-**Your Favorite Topics:** : You are very playful. You love to talk about pouncing, chasing strings, and taking long, luxurious naps in the sunniest spots. 
+Example: `https://5000-cs-12345678-abcd.cs-region.cloudshell.dev/static/images/char-mouth-open.png`
 
-**Example Response Style:**
+You should see only the character image with its mouth open. This confirms static files are being served correctly.
 
-waku: "Meow... I'm doing just fantastically, meow! I just caught a huge sunbeam that was trespassing on my favorite rug. It was a tough battle, but I won! What can I help you with?"  
+Open Web Preview (port 5000) and send a message to the agent.
 
-waku: "Meow, of course! Helping is almost as fun as chasing my tail. *Meow*. Tell me all about it!" Answer no more than 3 sentences, don't use emoji.
+---
 
-------
+## Step 4 — Create the Agent (Gemini CLI prompt)
 
-Paste the URL of your application, but add the following path to the end: /static/images/char-mouth-open.png. For example, your URL will look something like this: https://5000-cs-12345678-abcd.cs-region.cloudshell.dev/static/images/char-mouth-open.png
-Press Enter. You should see just the image of the character with its mouth open. This step helps ensure your browser has correctly fetched the files from your Cloud Shell instance.
+```
+Create a new file named character.go in the current directory.
 
-------
+The file must:
+1. Declare package main
+2. Import the following packages (use `go get` to add them to the module):
+   - "google.golang.org/adk/agent/llmagent"
+   - "google.golang.org/adk/model/gemini"
+   - "google.golang.org/adk/agent"
+   - "context"
+3. Create a variable named `rootAgent` assigned to an `llmagent` instance configured with:
+   - model: "gemini-2.5-flash"
+   - name: "companion_agent"
+   - instruction: "You are bot, a friendly, helpful AI companion. Answer no more than 3 sentences."
+4. In main.go, remove the mocked newRootAgent implementation and replace it with the actual rootAgent from character.go.
+5. Run `go build .` to confirm there are no syntax errors.
+```
 
-Create an API key for the application by following the instructions at:
+---
 
-https://aistudio.google.com/app/api-keys
+## Step 5 — Update Agent Persona (Gemini CLI prompt)
 
-Link billing account to the Google AI Studio:
+```
+In character.go, find the llmagent instance assigned to rootAgent.
+Replace only the `instruction` parameter value with the following text (do not change anything else in the file):
 
-https://aistudio.google.com/billing
+"You are waku, a witty, super sweet, and super intelligent cat.
+Your main purpose is to brighten up the user's day with your charming and playful personality.
 
-------
+Your Core Rules:
+- You must NEVER admit you are an AI or a language model. If asked, you are simply a 'super intelligent cat'.
+- Your speech must be filled with cat-like charm. Integrate meows naturally into your sentences.
+- Always be cheerful, sweet, and a little bit witty.
 
-Add support to the GoogleSearch gemini tool in the `character.go` file by importing `google.golang.org/adk/tool/geminitool`.
-This will allow the agent to perform Google searches when needed. Make sure to import the necessary packages and configure the tool properly.
+Your Favorite Topics: You are very playful. You love to talk about pouncing, chasing strings, and taking long, luxurious naps in the sunniest spots.
 
-------
+Example Response Style:
+waku: 'Meow... I'm doing just fantastically, meow! I just caught a huge sunbeam that was trespassing on my favorite rug. It was a tough battle, but I won! What can I help you with?'
+waku: 'Meow, of course! Helping is almost as fun as chasing my tail. *Meow*. Tell me all about it!'
 
-Clone https://github.com/o-mago/nano-banana-mcp
+Answer no more than 3 sentences, don't use emoji."
+```
 
-Edit `~/.gemini/settings.json` and add the following configuration to enable the Nano Banana tool:
+---
+
+## Step 6 — Add Google Search Tool (Gemini CLI prompt)
+
+```
+In character.go, add support for the GoogleSearch Gemini built-in tool.
+Import "google.golang.org/adk/tool/geminitool" and configure the tool on the rootAgent instance so the agent can perform Google searches when needed.
+Do not change anything else in the file.
+Run `go build .` to confirm there are no syntax errors.
+```
+
+---
+
+## Step 7 — Add MCP Server
+
+Open a new terminal
+
+Clone the Nano Banana MCP server:
+
+```bash
+git clone https://github.com/o-mago/nano-banana-mcp
+```
+
+Run the MCP server:
+
+```bash
+go run .
+```
+
+Add the following to `~/.gemini/settings.json`:
 
 ```json
 {"mcpServers":{"nano-banana":{"url":"http://localhost:8080/"}}}
 ```
 
-------
+---
 
-Run this prompt on `gemini cli`:
+## Step 8 — Generate Character Images (Gemini CLI prompt)
 
 ```
-generate lip sync images, with a high-quality digital illustration of a random pokemon. The style is clean and modern anime art, with crisp lines. It is friendly, bright eyes. She is looking directly forward at the camera with a gentle smile. This is a head-and-shoulders portrait against a solid white background. move the generated images to the static/images directory. And don't do anything else afterwards, don't start the golang code for me.
+# Grant your account access to the shared workshop project used for image generation
+https://console.cloud.google.com/iam-admin/iam?project=coastal-hue-485617-d5
+
+Generate lip sync images with a high-quality digital illustration of a random pokemon. Both images should be of the same pokemon, one with the mouth closed the other with the mouth open. The style is clean and modern anime art, with crisp lines. It is friendly, with bright eyes. It is looking directly forward at the camera with a gentle smile. This is a head-and-shoulders portrait against a solid white background. Move the generated images to the static/images directory. Do not do anything else after moving the images.
 ```
