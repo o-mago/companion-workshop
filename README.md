@@ -98,7 +98,7 @@ go run .
 ## Step 6 — Add Google Search Tool (Gemini CLI prompt)
 
 ```
-In character.go, add the google_search tool (do not change any other field)
+Add support to the GoogleSearch gemini tool in the character.go file by importing google.golang.org/adk/tool/geminitool. This will allow the agent to perform Google searches when needed. Make sure to import the necessary packages and configure the tool properly.
 ```
 
 Restart the app:
