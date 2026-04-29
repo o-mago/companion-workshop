@@ -6,8 +6,13 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"os"
 	"strings"
 
+	texporter "github.com/GoogleCloudPlatform/opentelemetry-operations-go/exporter/trace"
+
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/sdk/trace"
 	"google.golang.org/adk/agent"
 	"google.golang.org/adk/runner"
 	"google.golang.org/adk/session"
@@ -73,6 +78,22 @@ func handleChat(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	ctx := context.Background()
+	projectID := os.Getenv("PROJECT_ID")
+
+	// 1. Create the exporter
+	exporter, err := texporter.New(texporter.WithProjectID(projectID))
+	if err != nil {
+		log.Fatalf("failed to create exporter: %v", err)
+	}
+
+	// 2. Install the Trace Provider
+	tp := trace.NewTracerProvider(
+		trace.WithBatcher(exporter),
+	)
+	defer tp.Shutdown(ctx)
+	otel.SetTracerProvider(tp)
+
 	rootAgent, err := NewRootAgent(context.Background())
 	if err != nil {
 		log.Printf("failed to create root agent: %v", err)

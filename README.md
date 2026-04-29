@@ -157,3 +157,9 @@ You should see the `nano-banana` tools listed
 ```
 Generate lip sync images with a high-quality digital illustration of a random pokemon. Both images should be of the same pokemon, one with the mouth closed the other with the mouth open. The style is clean and modern anime art, with crisp lines. It is friendly, with bright eyes. It is looking directly forward at the camera with a gentle smile. This is a head-and-shoulders portrait against a solid white background. Move the generated images to the static/images directory. Do not do anything else after moving the images.
 ```
+
+Run again the app:
+
+```bash
+go run .
+```
