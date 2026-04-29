@@ -1,7 +1,7 @@
 ---
 theme: default
 background: '#ffffff'
-title: Agentes de IA com Go na GCP
+title: Criando seu primeiro agente IA com Go
 info: |
   Workshop sobre construção de agentes de IA usando Go no Cloud Shell da GCP.
 class: text-center
@@ -88,13 +88,57 @@ blockquote p { color: #475569 !important; }
 strong { color: #0f172a; }
 </style>
 
-# Agentes de IA com Go
-
-### Workshop · Cloud Shell · GCP
+# Criando seu primeiro agente IA com Go
 
 <div class="abs-br m-6 text-sm" style="color:#94a3b8">
-  Alexandre Bedeschi · 2025
+  Alexandre Cabral · 2026
 </div>
+
+<!--
+Boas-vindas. Apresente-se rapidamente — nome, de onde vem, por que Go e IA.
+
+Contexto do workshop: vamos construir um agente de IA do zero, rodando no Cloud Shell, sem precisar instalar nada localmente. Ao final teremos um chat com personalidade, busca no Google em tempo real e geração de imagens via MCP.
+
+Pergunte rapidamente quem já usou Go em produção e quem já experimentou alguma API de LLM — ajuda a calibrar o ritmo.
+-->
+
+---
+
+# Sobre mim
+
+<div class="grid gap-6 mt-1" style="grid-template-columns: 180px 1fr 140px">
+
+<div class="flex flex-col items-center gap-3">
+  <img src="/speaker-photo.png" alt="Foto" class="rounded-2xl object-cover" style="width:160px;height:160px;background:#f1f5f9;border:2px solid #e2e8f0" />
+  <img src="/cat-photo.jpg" alt="Genevieve" class="rounded-xl object-cover" style="width:160px;height:160px;background:#f1f5f9;border:2px solid #e2e8f0" />
+</div>
+
+
+<div class="flex flex-col justify-between py-1">
+  <ul class="text-base text-slate-700 space-y-2">
+    <li>📍 Juiz de Fora - MG</li>
+    <li>💼 Senior Software Engineer @ Stone</li>
+    <li>🐹 Golang Google Developer Expert</li>
+    <li>🔥 Botafogo</li>
+    <li>🌐 Organizador do Tech Hub JF</li>
+    <li>🧙‍♂️ Mago</li>
+
+  </ul>
+</div>
+
+<div class="flex flex-col items-center gap-2">
+  <img src="/qrcode.png" alt="QR Code" style="width:200px;height:200px;min-width:200px;min-height:200px;background:#f1f5f9;border:2px solid #e2e8f0;border-radius:8px;object-fit:fill" />
+  <p class="text-xs text-center" style="color:#94a3b8">Minhas redes</p>
+</div>
+
+</div>
+
+<!--
+Slide de apresentação pessoal. Coloque os arquivos em slides/public/:
+- speaker-photo.png — sua foto
+- cat-photo.jpg — foto da Genevieve
+- qrcode.png — QR code das redes sociais
+-->
 
 ---
 layout: center
@@ -125,11 +169,23 @@ layout: center
 </div>
 </div>
 
+<!--
+A primeira metade é teoria — conceitos que vamos usar na prática logo depois. Não se preocupem em absorver tudo agora; os conceitos vão fazer mais sentido quando a mão estiver no código.
+
+A parte prática é um live code guiado: cada passo tem um prompt pronto para o Gemini CLI, então ninguém vai ficar pra trás digitando boilerplate.
+
+Duração estimada: ~30 minutos de teoria, ~45 minutos de código.
+-->
+
 ---
 layout: section
 ---
 
 # O que é um Agente de IA?
+
+<!--
+Seção de abertura. O objetivo aqui é criar uma intuição clara sobre a diferença entre chamar um LLM diretamente e usar um agente. Muita gente confunde os dois.
+-->
 
 ---
 
@@ -170,6 +226,16 @@ Agent: Está 24°C e nublado em São Paulo.
 </div>
 </div>
 
+<!--
+O exemplo do clima é proposital — é a limitação mais conhecida de LLMs. Use isso como gancho.
+
+Ponto central: um LLM é uma função pura. Entrada entra, saída sai, acabou. Um agente é um processo — ele pode iterar, buscar dados, tomar decisões e tentar de novo.
+
+A palavra "stateless" vale uma pausa: o modelo não lembra de você entre chamadas. É o framework ao redor dele que gerencia o histórico.
+
+Clique para revelar o lado direito antes de continuar.
+-->
+
 ---
 
 # O Loop do Agente
@@ -206,6 +272,14 @@ Executa ferramenta, obtém resultado, re-raciocina
 
 </div>
 </div>
+
+<!--
+Destaque a seta de volta do "Agir" para o "Pensar" — esse loop é o coração do agente. O LLM pode chamar várias ferramentas em sequência antes de dar a resposta final.
+
+Analogia útil: é como um analista que recebe uma pergunta, vai buscar dados em sistemas diferentes, consolida e só então responde — em vez de responder de cabeça na hora.
+
+O ADK que vamos usar implementa exatamente esse loop. Vocês não precisam escrever ele — só definir o agente e as ferramentas.
+-->
 
 ---
 
@@ -250,11 +324,23 @@ Um agente é: **LLM + Tools + Memory + Instructions** rodando em loop
 
 </div>
 
+<!--
+Percorra cada componente rapidamente — o objetivo não é aprofundar em cada um agora, mas criar um vocabulário compartilhado para o resto do workshop.
+
+Memory vale um comentário extra: no nosso projeto vamos usar InMemoryService do ADK, que é o nível de Session. Long-term memory (vetores, RAG) está fora do escopo de hoje.
+
+A fórmula no final é o resumo que vale carregar para o live code.
+-->
+
 ---
 layout: section
 ---
 
 # Prompt Engineering
+
+<!--
+Transição rápida. Prompt engineering soa complexo mas no fundo é: como você fala com o modelo define o que ele faz. Vamos ver dois elementos essenciais.
+-->
 
 ---
 
@@ -295,6 +381,14 @@ invadindo meu tapete favorito. E você?
 
 </div>
 
+<!--
+O system prompt do waku que está nos slides é exatamente o que vamos usar no Step 5 do live code. Mostre que cada linha tem uma função: persona, missão, restrição, formato.
+
+Few-shot é subestimado: quando o comportamento esperado é difícil de descrever em palavras, um exemplo vale mais que um parágrafo de instrução. O modelo aprende o padrão por imitação.
+
+Dica prática: comece simples e itere. Um prompt de 3 linhas que funciona é melhor que um de 30 linhas que confunde o modelo.
+-->
+
 ---
 
 # Tool Use — Como o LLM Decide
@@ -316,12 +410,24 @@ sequenceDiagram
     A-->>U: "O Flamengo venceu o Palmeiras por 2 a 1!"
 ```
 
+<!--
+Percorra o diagrama passo a passo. O ponto que mais surpreende as pessoas: o LLM não executa a ferramenta — ele só decide qual chamar e com quais argumentos. É o framework (ADK) que de fato executa e devolve o resultado.
+
+Isso tem implicações práticas importantes: a segurança e a lógica de execução das ferramentas ficam no seu código Go, não no modelo.
+
+Segundo ponto: o agente manda as definições das tools junto com a mensagem. É por isso que descrever bem uma tool (nome, parâmetros, descrição) influencia diretamente se o modelo vai usá-la corretamente.
+-->
+
 ---
 layout: section
 ---
 
 # MCP
 ## Model Context Protocol
+
+<!--
+MCP é um dos tópicos mais quentes do momento em IA. Vale dedicar um minuto para contextualizar por que ele surgiu antes de mostrar o que é.
+-->
 
 ---
 
@@ -356,6 +462,14 @@ graph TD
 
 </div>
 </div>
+
+<!--
+A analogia do USB-C é a mais eficiente que existe para explicar MCP. Antes do USB-C, cada fabricante tinha seu conector. Antes do MCP, cada agente tinha sua forma de conectar ferramentas.
+
+Reforce: foi criado pela Anthropic mas é um padrão aberto. O Gemini CLI, o Claude, o Cursor, o Windsurf — todos suportam MCP. Você escreve um servidor MCP uma vez e ele funciona com qualquer host compatível.
+
+No nosso caso: o nano-banana é um MCP server em Go que expõe ferramentas de geração de imagem. O Gemini CLI atua como host.
+-->
 
 ---
 
@@ -404,12 +518,24 @@ http.ListenAndServe(":8080", nil)
 </div>
 </div>
 
+<!--
+Foque no transporte HTTP + SSE — é o que usamos no workshop. SSE (Server-Sent Events) permite que o servidor envie eventos pro cliente sem precisar de WebSocket.
+
+Das três primitivas, tools é a que vamos usar. Resources e prompts existem mas ficam fora do escopo de hoje.
+
+A configuração do Gemini CLI é literalmente um JSON com a URL do servidor — é tudo que o host precisa para descobrir e usar as ferramentas automaticamente.
+-->
+
 ---
 layout: section
 ---
 
 # ADK
 ## Agent Development Kit
+
+<!--
+Chegamos no framework que vai sustentar o projeto. ADK é o que cola tudo junto — modelo, ferramentas, sessão e loop do agente.
+-->
 
 ---
 
@@ -443,109 +569,23 @@ Gemini, Vertex AI, Google Search, MCP servers
 </div>
 </div>
 
----
+<!--
+ADK é open source — o repositório está no GitHub. Vale mencionar isso porque a comunidade está crescendo e PRs são bem-vindos.
 
-# ADK em Go — Conceitos Principais
+Python é a versão mais madura com mais exemplos e docs. Go está em alpha/beta mas já tem tudo que precisamos para o workshop. Se alguém vier da comunidade Go e quiser contribuir, é uma ótima oportunidade.
 
-<div class="grid grid-cols-2 gap-8">
-<div>
-
-**LLMAgent**
-
-O agente em si. Tem modelo, instrução, tools.
-
-```go
-import "google.golang.org/adk/agent/llmagent"
-import "google.golang.org/adk/model/gemini"
-
-rootAgent, _ := llmagent.New(llmagent.Config{
-  Model:       gemini.Flash2_5,
-  Name:        "companion_agent",
-  Instruction: "Você é waku, um gato...",
-  Tools:       []agent.Tool{...},
-})
-```
-
-</div>
-<div v-click>
-
-**Runner + Session**
-
-Gerencia o ciclo de vida das conversas.
-
-```go
-sessionSvc := session.InMemoryService()
-
-r, _ := runner.New(runner.Config{
-  AppName:           "companion",
-  Agent:             rootAgent,
-  SessionService:    sessionSvc,
-  AutoCreateSession: true,
-})
-
-msg := genai.NewContentFromText(input, genai.RoleUser)
-
-for event, err := range r.Run(ctx, userID, sessionID, msg, agent.RunConfig{}) {
-  if event.IsFinalResponse() {
-    fmt.Println(event.Content.Parts[0].Text)
-  }
-}
-```
-
-</div>
-</div>
-
----
-
-# ADK em Go — Tools
-
-<div class="grid grid-cols-2 gap-8">
-<div>
-
-**Gemini Built-in Tools**
-
-Ferramentas nativas do modelo.
-
-```go
-import "google.golang.org/adk/tool/geminitool"
-
-rootAgent, _ := llmagent.New(llmagent.Config{
-  Model:       gemini.Flash2_5,
-  Name:        "companion_agent",
-  Instruction: "...",
-  Tools: []agent.Tool{
-    geminitool.GoogleSearch(),
-  },
-})
-```
-
-</div>
-<div v-click>
-
-**Custom Tools**
-
-Funções Go que o agente pode invocar.
-
-```go
-func getBanana(ctx context.Context, size string) (string, error) {
-  return fmt.Sprintf("banana %s entregue!", size), nil
-}
-
-tool := agent.NewFunctionTool(
-  "get_banana",
-  "Entrega uma banana do tamanho especificado",
-  getBanana,
-)
-```
-
-</div>
-</div>
+O valor principal do ADK: você não precisa implementar o loop do agente, gerenciamento de sessão, ou o protocolo de tool use. Tudo isso já está lá.
+-->
 
 ---
 layout: section
 ---
 
 # Gemini CLI
+
+<!--
+O Gemini CLI vai ser nossa ferramenta de desenvolvimento durante o live code. Vale mostrar o que ele consegue fazer além do chat simples.
+-->
 
 ---
 
@@ -581,44 +621,29 @@ gemini  # inicia o chat
 # ~/.gemini/settings.json aponta para servidor MCP
 # as tools ficam disponíveis automaticamente
 gemini
-> use the nano-banana tool to get a large banana
+> use the nano-banana tool to generate an image of a cat
 ```
 
 </div>
 </div>
 
----
+<!--
+O diferencial do Gemini CLI em relação a outros chats: acesso ao sistema de arquivos local. Ele pode ler seus arquivos, escrever código, executar comandos — é um agente de desenvolvimento real rodando no terminal.
 
-# Gemini CLI — Use Cases no Workshop
+No Cloud Shell isso é especialmente poderoso: o CLI tem acesso direto ao projeto, pode criar arquivos, rodar `go build`, checar erros e corrigir — tudo em sequência.
 
-**Geração de assets com prompt de texto**
-
-```bash
-gemini <<'EOF'
-generate lip sync images, with a high-quality digital illustration
-of a random pokemon. The style is clean and modern anime art.
-Move the generated images to the static/images directory.
-EOF
-```
-
-**Pair programming no terminal**
-
-```bash
-gemini "explain the handleChat function in main.go"
-gemini "add error handling to the runner.Run loop"
-```
-
-<div v-click class="hl hl-orange mt-5 text-sm">
-
-O Gemini CLI usa o mesmo modelo que seu agente — você pode iterar e testar comportamentos de ferramentas sem subir a aplicação.
-
-</div>
+Destaque o suporte nativo a MCP: depois de configurar o settings.json, as tools ficam disponíveis automaticamente sem nenhum código adicional.
+-->
 
 ---
 layout: section
 ---
 
 # Go no Ecossistema de IA
+
+<!--
+Uma dúvida comum: "por que Go para IA se todo mundo usa Python?" Vamos endereçar isso diretamente.
+-->
 
 ---
 
@@ -642,13 +667,13 @@ layout: section
 
 **Ponto de atenção**
 
-O ADK em Go está em **alpha/beta**. A versão Python é mais madura, mas o Go já tem:
+O ADK em Go já está **estável**. A versão Python é mais madura, mas o Go já tem:
 
 - `LLMAgent`, `Runner`, `Session`
 - Built-in tools (GoogleSearch)
 - Custom function tools
 - Streaming de eventos via `range`
-- Multi-agent (em desenvolvimento)
+- Multi-agent
 
 </div>
 
@@ -660,6 +685,14 @@ O ADK em Go está em **alpha/beta**. A versão Python é mais madura, mas o Go j
 **Por que Go?** Performance, binários pequenos, tipagem forte, excelente para servidores HTTP — ideal para agentes em produção na nuvem.
 
 </div>
+
+<!--
+Seja honesto sobre o estado do ADK em Go: é estável. Isso significa que a API é confiável, a documentação está disponível e os recursos essenciais para construir um agente funcional já estão lá.
+
+A escolha de Go faz sentido quando o agente precisa ser um serviço de produção: startup rápido, memória baixa, binário único sem dependências, tipagem forte que pega bugs em compile time.
+
+Python domina no mundo de ML/treino de modelos, mas para servir um agente como API HTTP, Go tem vantagens reais. O ecossistema está crescendo rápido — SDKs oficiais do Google já existem.
+-->
 
 ---
 
@@ -679,20 +712,34 @@ graph TB
         R --> S
     end
 
-    subgraph Tools["Tools"]
-        GS[Google Search\ngeminitool]
-        NB[nano-banana\nMCP Server]
-    end
-
     subgraph Google["Google AI"]
         G[Gemini 2.5 Flash]
     end
 
+    subgraph Tools["Tools do Agente"]
+        GS[Google Search\ngeminitool]
+    end
+
+    subgraph CLI["Gemini CLI"]
+        GC[gemini]
+        NB[nano-banana\nMCP Server]
+        GC -->|MCP/HTTP| NB
+    end
+
     C --> R
     C --> GS
-    C --> NB
     R --> G
 ```
+
+<!--
+Este diagrama é o mapa do que vamos construir. Use-o para orientar os participantes antes de entrar no código.
+
+Dois arquivos principais na aplicação: main.go já existe (HTTP server, rotas, runner) — vocês não vão mexer muito nele. character.go é o que vamos criar do zero no live code.
+
+O ADK fica entre o agente e o Gemini — gerencia sessão, loop de tool use, streaming de eventos.
+
+Ponto importante: o nano-banana não é chamado pela aplicação Go. Ele é chamado pelo Gemini CLI, que usa o MCP para geração de imagens durante o Step 8. São dois contextos separados — a aplicação usa o ADK, o Gemini CLI usa MCP.
+-->
 
 ---
 layout: section
@@ -700,6 +747,10 @@ layout: section
 
 # O Projeto
 ## O que vamos construir
+
+<!--
+Agora que temos toda a teoria, vamos ver o que vamos construir concretamente antes de abrir o Cloud Shell.
+-->
 
 ---
 
@@ -753,9 +804,17 @@ layout: section
 </div>
 </div>
 
----
+<!--
+O projeto é simples de propósito — o foco é nos conceitos, não em CSS ou infraestrutura. O main.go já está pronto com o servidor HTTP, rotas e runner. O que falta é o character.go com o agente.
 
-# Roteiro do Live Code
+Contextualize: ao final do live code vamos ter um chat funcional rodando no Cloud Shell, acessível via Web Preview, com um personagem que tem personalidade, acessa o Google em tempo real e pode gerar imagens.
+
+Se alguém quiser levar para produção depois, o que muda é basicamente: trocar InMemoryService por um serviço de sessão persistente e colocar um load balancer na frente.
+-->
+
+<!-- --- -->
+
+<!-- # Roteiro do Live Code
 
 <div class="mt-2 space-y-3">
 
@@ -786,7 +845,17 @@ layout: section
 
 </div>
 
----
+<!--
+Revele cada passo com clique. Isso cria ritmo e dá tempo para as pessoas visualizarem o que vem pela frente.
+
+Steps 1–3 são os mais rápidos — cada um é uma modificação pequena no character.go. Step 4 envolve abrir um novo terminal e subir o MCP server. Step 5 é o mais "mágico" — um prompt gera as imagens e as move para o lugar certo.
+
+Lembrete: cada passo tem um prompt pronto no README.md. Não precisa decorar nada — é só copiar, colar no Gemini CLI e deixar ele trabalhar.
+
+Tempo estimado por step: 5–8 minutos. Se ficar atrás, os steps 4 e 5 podem ser demonstrados pelo apresentador enquanto os outros acompanham.
+-->
+
+<!-- ---
 
 # Estrutura do Projeto
 
@@ -812,7 +881,15 @@ export GOOGLE_API_KEY="sua-chave-do-ai-studio"
 gcloud auth application-default login
 ```
 
-</div>
+</div> -->
+
+<!--
+Mostre que a estrutura é intencionalmente simples. Não tem Makefile, Docker, CI — só o suficiente para o workshop funcionar.
+
+O character.go não existe ainda — é o arquivo que vamos criar no Step 1 usando o Gemini CLI. O main.go já tem um stub de `newRootAgent` que retorna nil; vamos substituir pelo agente real.
+
+Sobre as variáveis de ambiente: o setup.sh que rodamos no Step 2 já exporta o GOOGLE_API_KEY automaticamente. Mas lembre as pessoas que cada novo terminal precisa ter a variável — por isso adicionamos ao ~/.bashrc.
+-->
 
 ---
 layout: center
@@ -832,3 +909,18 @@ Cloud Shell · Go · Gemini · ADK
 <div class="abs-br m-6 text-sm" style="color:#cbd5e1">
   companion-workshop · 2025
 </div>
+
+<!--
+Última slide antes do live code. Mantenha a energia alta.
+
+Checklist rápido antes de começar:
+- Todos com o Cloud Shell aberto?
+- Setup script rodado (source ./setup.sh)?
+- GOOGLE_API_KEY exportada?
+- go run . rodando na porta 5000?
+- Web Preview funcionando?
+
+Se alguém tiver problema de setup, peça para um colega do lado ajudar enquanto você começa o live code — não trave aqui.
+
+Abra o README.md e o terminal lado a lado. Boa sorte!
+-->
