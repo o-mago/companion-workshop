@@ -13,10 +13,12 @@ gcloud auth application-default login
 chmod +x save_credentials.sh setup.sh
 bash ./save_credentials.sh
 source ./setup.sh
-gcloud services enable compute.googleapis.com aiplatform.googleapis.com generativelanguage.googleapis.com
-gcloud projects add-iam-policy-binding $PROJECT_ID \
-  --member="user:$(gcloud config get account)" \
-  --role="roles/aiplatform.user"
+```
+
+To automatically load the environment in every new terminal:
+
+```bash
+echo "source $(pwd)/setup.sh" >> ~/.bashrc
 ```
 
 ---
@@ -99,6 +101,7 @@ go run .
 
 ```
 Add support to the GoogleSearch gemini tool in the character.go file by importing google.golang.org/adk/tool/geminitool. This will allow the agent to perform Google searches when needed. Make sure to import the necessary packages and configure the tool properly.
+Make sure it's building correctly
 ```
 
 Restart the app:
@@ -131,13 +134,26 @@ Add the following to `~/.gemini/settings.json`:
 {"mcpServers":{"nano-banana":{"url":"http://localhost:8080/"}}}
 ```
 
+### Verify MCP is accessible via Gemini CLI
+
+In a new terminal, start Gemini CLI:
+
+```bash
+gemini
+```
+
+List the available tools to confirm the MCP server tools are registered:
+
+```
+/mcp
+```
+
+You should see the `nano-banana` tools listed
+
 ---
 
 ## Step 8 — Generate Character Images (Gemini CLI prompt)
 
 ```
-# Grant your account access to the shared workshop project used for image generation
-https://console.cloud.google.com/iam-admin/iam?project=coastal-hue-485617-d5
-
 Generate lip sync images with a high-quality digital illustration of a random pokemon. Both images should be of the same pokemon, one with the mouth closed the other with the mouth open. The style is clean and modern anime art, with crisp lines. It is friendly, with bright eyes. It is looking directly forward at the camera with a gentle smile. This is a head-and-shoulders portrait against a solid white background. Move the generated images to the static/images directory. Do not do anything else after moving the images.
 ```
