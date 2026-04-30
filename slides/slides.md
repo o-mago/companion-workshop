@@ -913,7 +913,7 @@ Uma dúvida comum: "por que Go para IA se todo mundo usa Python?" Vamos endereç
 |--------|-----------|
 | `google.golang.org/adk` | Agent Development Kit |
 | `google.golang.org/genai` | Gemini / Vertex AI |
-| `github.com/mark3labs/mcp-go` | MCP server/client |
+| `github.com/modelcontextprotocol/go-sdk` | MCP server/client |
 
 </div>
 <div v-click>
@@ -965,7 +965,7 @@ Agora que temos toda a teoria, vamos ver o que vamos construir concretamente ant
 # Companion — Visão Geral
 
 <div class="grid grid-cols-2 gap-8">
-<div>
+<div class="min-w-0">
 
 <div class="mb-4">
 <p class="font-bold mb-1">O que é</p>
@@ -999,14 +999,14 @@ Agora que temos toda a teoria, vamos ver o que vamos construir concretamente ant
 **Interface**
 
 ```
-┌──────────────────────────────────┐
-│   Gophi 🐹                       │
-├──────────────────────────────────┤
-│  Gophi: Oi! Já rodou go fmt?    │
-│  Posso resolver com goroutines.  │
-│                                  │
-│  você: [____________________]    │
-└──────────────────────────────────┘
+┌--------------------------------------┐
+│   Gophi 🐹                                   │
+├---------------------------------------┤
+│  Gophi: Oi! Já rodou go fmt?      │
+│  Posso resolver com goroutines.│
+│                                                     │
+│  você: [____________________]   │
+└--------------------------------------┘
 ```
 
 </div>
