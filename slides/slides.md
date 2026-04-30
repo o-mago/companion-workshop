@@ -91,7 +91,7 @@ strong { color: #0f172a; }
 # Criando seu primeiro agente IA com Go
 
 <div class="abs-br m-6 text-sm" style="color:#94a3b8">
-  Alexandre Cabral · 2026
+  Alexandre Cabral Bedeschi · 2026
 </div>
 
 <!--
@@ -573,6 +573,21 @@ A fórmula no final é o resumo que vale carregar para o live code.
 -->
 
 ---
+layout: center
+class: text-center
+---
+
+# Agente de IA é software.
+
+<p class="mt-4 text-slate-500 text-xl">Nada mais que isso.</p>
+
+<!--
+Desmistificação intencional. Antes de entrar em frameworks e ferramentas, vale ancorar: no final do dia, um agente é um programa Go que chama uma API. Tem loop, tem if, tem função. A "inteligência" vem do modelo — o agente é só a estrutura ao redor.
+
+Pause aqui. Deixe a frase respirar.
+-->
+
+---
 layout: section
 ---
 
@@ -932,53 +947,6 @@ Seja honesto sobre o estado do ADK em Go: é estável. Isso significa que a API 
 A escolha de Go faz sentido quando o agente precisa ser um serviço de produção: startup rápido, memória baixa, binário único sem dependências, tipagem forte que pega bugs em compile time.
 
 Python domina no mundo de ML/treino de modelos, mas para servir um agente como API HTTP, Go tem vantagens reais. O ecossistema está crescendo rápido — SDKs oficiais do Google já existem.
--->
-
----
-
-# Arquitetura do Ecossistema
-
-```mermaid {scale: 0.68}
-graph TB
-    subgraph App["Aplicação Go"]
-        M[main.go\nHTTP Server]
-        C[character.go\nLLMAgent]
-        M --> C
-    end
-
-    subgraph ADK["google.golang.org/adk"]
-        R[Runner]
-        S[Session Service]
-        R --> S
-    end
-
-    subgraph Google["Google AI"]
-        G[Gemini 2.5 Flash]
-    end
-
-    subgraph Tools["Tools do Agente"]
-        GS[Google Search\ngeminitool]
-    end
-
-    subgraph CLI["Gemini CLI"]
-        GC[gemini]
-        NB[nano-banana\nMCP Server]
-        GC -->|MCP/HTTP| NB
-    end
-
-    C --> R
-    C --> GS
-    R --> G
-```
-
-<!--
-Este diagrama é o mapa do que vamos construir. Use-o para orientar os participantes antes de entrar no código.
-
-Dois arquivos principais na aplicação: main.go já existe (HTTP server, rotas, runner) — vocês não vão mexer muito nele. character.go é o que vamos criar do zero no live code.
-
-O ADK fica entre o agente e o Gemini — gerencia sessão, loop de tool use, streaming de eventos.
-
-Ponto importante: o nano-banana não é chamado pela aplicação Go. Ele é chamado pelo Gemini CLI, que usa o MCP para geração de imagens durante o Step 8. São dois contextos separados — a aplicação usa o ADK, o Gemini CLI usa MCP.
 -->
 
 ---
