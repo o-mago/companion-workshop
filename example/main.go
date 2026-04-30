@@ -9,10 +9,11 @@ import (
 	"os"
 	"strings"
 
-	texporter "github.com/GoogleCloudPlatform/opentelemetry-operations-go/exporter/trace"
-
+	cloudtrace "github.com/GoogleCloudPlatform/opentelemetry-operations-go/exporter/trace"
 	"go.opentelemetry.io/otel"
-	"go.opentelemetry.io/otel/sdk/trace"
+	"go.opentelemetry.io/otel/sdk/resource"
+	sdktrace "go.opentelemetry.io/otel/sdk/trace"
+	semconv "go.opentelemetry.io/otel/semconv/v1.26.0"
 	"google.golang.org/adk/agent"
 	"google.golang.org/adk/runner"
 	"google.golang.org/adk/session"
@@ -29,6 +30,36 @@ const (
 	userID    = "inapp_user"
 	sessionID = "default_session"
 )
+
+func initTracer() (func(), error) {
+	projectID := os.Getenv("PROJECT_ID")
+
+	exporter, err := cloudtrace.New(cloudtrace.WithProjectID(projectID))
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := resource.New(context.Background(),
+		resource.WithAttributes(
+			semconv.ServiceNameKey.String(appName),
+		),
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	tp := sdktrace.NewTracerProvider(
+		sdktrace.WithBatcher(exporter),
+		sdktrace.WithResource(res),
+	)
+	otel.SetTracerProvider(tp)
+
+	return func() {
+		if err := tp.Shutdown(context.Background()); err != nil {
+			log.Printf("failed to shutdown tracer provider: %v", err)
+		}
+	}, nil
+}
 
 type chatRequest struct {
 	Message string `json:"message"`
@@ -79,31 +110,21 @@ func handleChat(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	ctx := context.Background()
-	projectID := os.Getenv("PROJECT_ID")
 
-	// 1. Create the exporter
-	exporter, err := texporter.New(texporter.WithProjectID(projectID))
+	shutdown, err := initTracer()
 	if err != nil {
-		log.Fatalf("failed to create exporter: %v", err)
+		log.Fatal(err)
 	}
+	defer shutdown()
 
-	// 2. Install the Trace Provider
-	tp := trace.NewTracerProvider(
-		trace.WithBatcher(exporter),
-	)
-	defer tp.Shutdown(ctx)
-	otel.SetTracerProvider(tp)
-
-	rootAgent, err := NewRootAgent(context.Background())
+	rootAgent, err := newRootAgent(ctx)
 	if err != nil {
-		log.Printf("failed to create root agent: %v", err)
-		log.Println("Server will run without AI agent functionality.")
+		log.Fatal("failed to create agent:", err)
 	}
 
 	if rootAgent != nil {
 		sessionSvc := session.InMemoryService()
 
-		var err error
 		agentRunner, err = runner.New(runner.Config{
 			AppName:           appName,
 			Agent:             rootAgent,

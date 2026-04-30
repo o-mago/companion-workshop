@@ -51,11 +51,11 @@ The file must:
    - "google.golang.org/adk/model/gemini"
    - "google.golang.org/adk/agent"
    - "context"
-3. Create a variable named `rootAgent` assigned to an `llmagent` instance configured with:
+3. Create a implementation of `newRootAgent` returning an `llmagent` instance configured with:
    - model: "gemini-2.5-flash"
    - name: "companion_agent"
    - instruction: "You are Gophi, a friendly Go gopher. Answer no more than 3 sentences."
-4. In main.go, remove the mocked newRootAgent implementation and replace it with the actual rootAgent from character.go.
+4. In main.go, remove the mocked newRootAgent implementation and replace it with the actual newRootAgent from character.go.
 5. Run `go build .` to confirm there are no syntax errors.
 ```
 
@@ -191,6 +191,7 @@ Follow these steps exactly:
        - A Resource with service.name set to the appName constant
    - Registers the provider globally with otel.SetTracerProvider
    - Returns a shutdown function (func()) and an error
+   - Use the env var PROJECT_ID for the cloudtrace exporter if needed.
 
 3. In the main() function, call initTracer() right after creating the context, before anything else. If it returns an error, log.Fatal it. Defer the shutdown function.
 
@@ -206,7 +207,7 @@ go run .
 Send a few messages in the chat, then open the GCP Cloud Trace Explorer to see the traces:
 
 ```
-https://console.cloud.google.com/traces/list?project=YOUR_PROJECT_ID
+https://console.cloud.google.com/traces/list
 ```
 
 > **Note:** Traces may take up to 30 seconds to appear in the console. Make sure `PROJECT_ID` is set in your environment (`echo $PROJECT_ID`).
