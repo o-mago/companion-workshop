@@ -132,7 +132,7 @@ go run .
 Add the following to `~/.gemini/settings.json`:
 
 ```json
-{"mcpServers":{"nano-banana":{"url":"http://localhost:8080/"}}}
+{"mcpServers":{"nano-banana":{"url":"http://localhost:8090/"}}}
 ```
 
 ### Verify MCP is accessible via Gemini CLI
@@ -156,7 +156,7 @@ You should see the `nano-banana` tools listed
 ## Step 8 — Generate Character Images (Gemini CLI prompt)
 
 ```
-Generate lip sync images of Gophi, the Go gopher mascot. Both images should be of the same character, one with the mouth closed and one with the mouth open. The style is a high-quality digital illustration: clean, friendly, slightly chubby blue gopher with big bright eyes, wearing a tiny Botafogo football team t-shirt, looking directly forward at the camera. Head-and-shoulders portrait against a solid white background. Move the generated images to the static/images directory. Do not do anything else after moving the images.
+Generate lip sync images of Gophi, the Go gopher mascot. Both images should be of the same character, one with the mouth closed and one with the mouth open. The style is a high-quality digital illustration: clean, friendly, slightly chubby blue gopher with big bright eyes, wearing a tiny Botafogo football team jersey, looking directly forward at the camera. Head-and-shoulders portrait against a solid white background. Move the generated images to the static/images directory. Do not do anything else after moving the images.
 ```
 
 Run again the app:
