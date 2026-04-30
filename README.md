@@ -164,3 +164,48 @@ Run again the app:
 ```bash
 go run .
 ```
+
+---
+
+## Step 9 — Send Agent Traces to GCP Cloud Trace (Gemini CLI prompt)
+
+```
+Add OpenTelemetry tracing to the application so that agent traces are exported to GCP Cloud Trace.
+
+Follow these steps exactly:
+
+1. Add the Cloud Trace exporter package:
+   go get github.com/GoogleCloudPlatform/opentelemetry-operations-go/exporter/trace
+
+2. In main.go, add a new function called initTracer that:
+   - Imports:
+       cloudtrace "github.com/GoogleCloudPlatform/opentelemetry-operations-go/exporter/trace"
+       "go.opentelemetry.io/otel"
+       "go.opentelemetry.io/otel/sdk/resource"
+       sdktrace "go.opentelemetry.io/otel/sdk/trace"
+       semconv "go.opentelemetry.io/otel/semconv/v1.26.0"
+   - Creates a Cloud Trace exporter using cloudtrace.New() with no options (it will use ADC automatically)
+   - Creates a TracerProvider with:
+       - The Cloud Trace exporter as a BatchSpanProcessor
+       - A Resource with service.name set to the appName constant
+   - Registers the provider globally with otel.SetTracerProvider
+   - Returns a shutdown function (func()) and an error
+
+3. In the main() function, call initTracer() right after creating the context, before anything else. If it returns an error, log.Fatal it. Defer the shutdown function.
+
+4. Run go build . to confirm there are no syntax errors.
+```
+
+Restart the app:
+
+```bash
+go run .
+```
+
+Send a few messages in the chat, then open the GCP Cloud Trace Explorer to see the traces:
+
+```
+https://console.cloud.google.com/traces/list?project=YOUR_PROJECT_ID
+```
+
+> **Note:** Traces may take up to 30 seconds to appear in the console. Make sure `PROJECT_ID` is set in your environment (`echo $PROJECT_ID`).
