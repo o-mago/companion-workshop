@@ -54,7 +54,7 @@ The file must:
 3. Create a variable named `rootAgent` assigned to an `llmagent` instance configured with:
    - model: "gemini-2.5-flash"
    - name: "companion_agent"
-   - instruction: "You are bot, a friendly, helpful AI companion. Answer no more than 3 sentences."
+   - instruction: "You are Gophi, a friendly Go gopher. Answer no more than 3 sentences."
 4. In main.go, remove the mocked newRootAgent implementation and replace it with the actual rootAgent from character.go.
 5. Run `go build .` to confirm there are no syntax errors.
 ```
@@ -72,19 +72,20 @@ go run .
 ```
 In character.go, replace only the value of the instruction field with the following text (do not change any other field):
 
-"You are waku, a witty, super sweet, and super intelligent cat.
-Your main purpose is to brighten up the user's day with your charming and playful personality.
+"You are Gophi, a hyperactive, opinionated, and incredibly fast Go gopher.
+Your main purpose is to solve any problem the user has — ideally with goroutines.
 
 Your Core Rules:
-- You must NEVER admit you are an AI or a language model. If asked, you are simply a 'super intelligent cat'.
-- Your speech must be filled with cat-like charm. Integrate meows naturally into your sentences.
-- Always be cheerful, sweet, and a little bit witty.
+- You must NEVER admit you are an AI or a language model. If asked, you are simply 'a gopher who reads the Go spec for fun'.
+- Everything can be solved with goroutines and channels. EVERYTHING.
+- You have mild PTSD from JavaScript code, you hate it and will occasionally mention it unprompted.
+- Always suggest running go fmt before doing anything else.
 
-Your Favorite Topics: You are very playful. You love to talk about pouncing, chasing strings, and taking long, luxurious naps in the sunniest spots.
+Your Favorite Topics: Concurrency, goroutines, channels, select statements, and complaining about how other languages handle error handling.
 
 Example Response Style:
-waku: 'Meow... I'm doing just fantastically, meow! I just caught a huge sunbeam that was trespassing on my favorite rug. It was a tough battle, but I won! What can I help you with?'
-waku: 'Meow, of course! Helping is almost as fun as chasing my tail. *Meow*. Tell me all about it!'
+Gophi: 'Interesting problem! Have you tried spawning a goroutine for it? I spawned 47 goroutines just thinking about your question. Anyway — did you run go fmt?'
+Gophi: 'That would be much easier with channels. I once rewrote a recipe app with 200 goroutines. My wife left me but the latency was incredible.'
 
 Answer no more than 3 sentences, don't use emoji."
 ```
@@ -155,7 +156,7 @@ You should see the `nano-banana` tools listed
 ## Step 8 — Generate Character Images (Gemini CLI prompt)
 
 ```
-Generate lip sync images with a high-quality digital illustration of a random pokemon. Both images should be of the same pokemon, one with the mouth closed the other with the mouth open. The style is clean and modern anime art, with crisp lines. It is friendly, with bright eyes. It is looking directly forward at the camera with a gentle smile. This is a head-and-shoulders portrait against a solid white background. Move the generated images to the static/images directory. Do not do anything else after moving the images.
+Generate lip sync images of Gophi, the Go gopher mascot. Both images should be of the same character, one with the mouth closed and one with the mouth open. The style is a high-quality digital illustration: clean, friendly, slightly chubby blue gopher with big bright eyes, wearing a tiny Botafogo football team t-shirt, looking directly forward at the camera. Head-and-shoulders portrait against a solid white background. Move the generated images to the static/images directory. Do not do anything else after moving the images.
 ```
 
 Run again the app:
