@@ -402,7 +402,7 @@ Servidor MCP independente que expõe ferramentas de geração de imagem via prot
 ### Constante do modelo
 
 ```go
-const imageModel = "gemini-2.0-flash-preview-image-generation"
+const imageModel = "gemini-2.5-flash-image"
 ```
 
 Modelo específico para geração de imagens via AI Studio. Diferente dos modelos de texto, ele retorna dados binários (PNG) dentro da resposta.
