@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
         voices = allVoices.filter(voice => voice.name.includes('Google'));
         voiceSelect.innerHTML = '';
 
-        let usVoiceIndex = -1;
+        let ptVoiceIndex = -1;
 
         voices.forEach((voice, i) => {
             const option = document.createElement('option');
@@ -25,15 +25,13 @@ document.addEventListener('DOMContentLoaded', () => {
             option.setAttribute('data-name', voice.name);
             voiceSelect.appendChild(option);
 
-            if (voice.lang === 'en-US') {
-                if (usVoiceIndex === -1) { // Find the first US voice
-                    usVoiceIndex = i;
-                }
+            if (ptVoiceIndex === -1 && voice.lang.toLowerCase().startsWith('pt')) {
+                ptVoiceIndex = i; // Default to the first Brazilian Portuguese voice
             }
         });
 
-        if (usVoiceIndex !== -1) {
-            voiceSelect.selectedIndex = usVoiceIndex;
+        if (ptVoiceIndex !== -1) {
+            voiceSelect.selectedIndex = ptVoiceIndex;
         }
     }
 
@@ -81,10 +79,12 @@ document.addEventListener('DOMContentLoaded', () => {
         clearInterval(lipSyncInterval);
 
         const utterance = new SpeechSynthesisUtterance(text);
-        const selectedOption = voiceSelect.selectedOptions[0].getAttribute('data-name');
+        utterance.lang = 'pt-BR';
+        const selectedOption = voiceSelect.selectedOptions[0]?.getAttribute('data-name');
         const selectedVoice = voices.find(voice => voice.name === selectedOption);
         if (selectedVoice) {
             utterance.voice = selectedVoice;
+            utterance.lang = selectedVoice.lang;
         }
 
         utterance.onstart = () => {
