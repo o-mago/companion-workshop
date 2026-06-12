@@ -6,6 +6,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"os"
 	"strings"
 
 	"google.golang.org/adk/agent"
@@ -105,6 +106,10 @@ func main() {
 	mux.HandleFunc("POST /chat", handleChat)
 	mux.Handle("GET /static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
-	log.Println("Server listening on :5000")
-	log.Fatal(http.ListenAndServe(":5000", mux))
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "5000"
+	}
+	log.Printf("Server listening on :%s", port)
+	log.Fatal(http.ListenAndServe(":"+port, mux))
 }
