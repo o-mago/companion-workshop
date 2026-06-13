@@ -30,7 +30,7 @@ body {
 
 .chat-container {
     width: 100%;
-    max-width: 800px;
+    max-width: 1000px;
     background-color: var(--container-background);
     border: 1px solid rgba(255, 223, 0, 0.18);
     border-radius: 12px;
@@ -78,19 +78,29 @@ body {
     opacity: 0.85;
 }
 
-.character-viewer {
-    text-align: center;
-    padding: 1rem;
-    flex-shrink: 1;
+/* Corpo do chat: imagem à esquerda, resposta à direita (lado a lado) */
+.chat-body {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex-grow: 1;
     min-height: 0;
+    gap: 1.5rem;
+    padding: 1rem 1.5rem;
+}
+
+.character-viewer {
+    flex: 0 0 44%;
+    min-width: 0;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
 .character-viewer #character-image {
-    width: min(600px, 70vw, 45vh);
-    height: min(600px, 70vw, 45vh);
+    width: min(100%, 56vh);
+    aspect-ratio: 1;
+    height: auto;
     border-radius: 50%;
     object-fit: cover;
     background: #fff;
@@ -99,14 +109,18 @@ body {
 }
 
 #status {
-    text-align: center;
-    padding: 1.5rem;
-    font-size: 0.95rem;
-    line-height: 1.6;
-    flex-grow: 1;
+    flex: 1 1 0;
+    min-width: 0;
+    min-height: 0;
+    height: 100%;
+    overflow-y: auto;
+    text-align: left;
+    font-size: 1.8rem;
+    line-height: 1.5;
+    padding: 0.5rem;
     display: flex;
-    align-items: center;
-    justify-content: center;
+    flex-direction: column;
+    justify-content: safe center;
 }
 
 .chat-input-area {
@@ -124,7 +138,7 @@ body {
     border-radius: 8px;
     padding: 0.8rem;
     font-family: 'Inter', sans-serif;
-    height: 50px;
+    height: 64px;
 }
 
 #text-input {
@@ -135,10 +149,11 @@ body {
     border-radius: 8px;
     padding: 0.8rem;
     font-family: 'Inter', sans-serif;
+    font-size: 1.4rem;
     resize: none;
-    height: 50px;
-    line-height: 1.5;
-    max-height: 120px;
+    height: 64px;
+    line-height: 1.4;
+    max-height: 180px;
     overflow-y: auto;
 }
 
@@ -177,7 +192,7 @@ body {
 
 /* --- Responsive --- */
 
-/* Tablet and below */
+/* Tablet and below: empilha imagem em cima, resposta embaixo */
 @media (max-width: 768px) {
     .chat-container {
         border-radius: 8px;
@@ -185,13 +200,25 @@ body {
         height: 98dvh;
     }
 
+    .chat-body {
+        flex-direction: column;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+    }
+
     .character-viewer {
+        flex: 0 0 auto;
         padding: 0.5rem;
     }
 
     .character-viewer #character-image {
-        width: min(500px, 70vw, 40vh);
-        height: min(500px, 70vw, 40vh);
+        width: min(70vw, 32vh);
+    }
+
+    #status {
+        height: auto;
+        text-align: center;
+        justify-content: flex-start;
     }
 }
 
@@ -227,7 +254,12 @@ body {
     }
 
     #text-input {
-        height: 40px;
-        font-size: 0.9rem;
+        height: 44px;
+        font-size: 1rem;
+    }
+
+    #status {
+        font-size: 1.2rem;
+        padding: 1rem;
     }
 }

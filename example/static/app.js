@@ -113,7 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!message) return;
 
         textInput.value = '';
-        textInput.style.height = '50px';
+        textInput.style.height = '64px';
         status.textContent = "Thinking...";
 
         try {
