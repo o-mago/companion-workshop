@@ -1,3 +1,17 @@
+## Step 0 — Run the Slides
+
+The workshop slides live in the `slides/` directory (built with [Slidev](https://sli.dev/)).
+
+```bash
+cd slides
+npm install
+npm run dev
+```
+
+Then open http://localhost:3030 in your browser.
+
+---
+
 ## Step 1 — Create API Key & Enable Billing
 
 1. Create a Google AI Studio API key: https://aistudio.google.com/app/api-keys
@@ -39,7 +53,7 @@ Open Web Preview (port 5000) and send a message to the agent.
 
 ---
 
-## Step 4 — Create the Agent (Gemini CLI prompt)
+## Step 4 — Create the Agent (Antigravity CLI prompt)
 
 ```
 Create a new file named character.go in the current directory.
@@ -67,7 +81,7 @@ go run .
 
 ---
 
-## Step 5 — Update Agent Persona (Gemini CLI prompt)
+## Step 5 — Update Agent Persona (Antigravity CLI prompt)
 
 ```
 In character.go, replace only the value of the instruction field with the following text (do not change any other field):
@@ -99,7 +113,7 @@ go run .
 
 ---
 
-## Step 6 — Add Google Search Tool (Gemini CLI prompt)
+## Step 6 — Add Google Search Tool (Antigravity CLI prompt)
 
 ```
 Add support to the GoogleSearch gemini tool in the character.go file by importing google.golang.org/adk/tool/geminitool. This will allow the agent to perform Google searches when needed. Make sure to import the necessary packages and configure the tool properly.
@@ -130,18 +144,20 @@ Run the MCP server:
 go run .
 ```
 
-Add the following to `~/.gemini/settings.json`:
+Add the following to `~/.gemini/config/mcp_config.json`:
 
 ```json
-{"mcpServers":{"nano-banana":{"url":"http://localhost:8090/"}}}
+{"mcpServers":{"nano-banana":{"serverUrl":"http://localhost:8090/"}}}
 ```
 
-### Verify MCP is accessible via Gemini CLI
+> **Note:** In the Antigravity CLI the remote server field is `serverUrl` (not `url`). If you get the name wrong, the server fails silently.
 
-In a new terminal, start Gemini CLI:
+### Verify MCP is accessible via Antigravity CLI
+
+In a new terminal, start the Antigravity CLI:
 
 ```bash
-gemini
+agy
 ```
 
 List the available tools to confirm the MCP server tools are registered:
@@ -154,7 +170,7 @@ You should see the `nano-banana` tools listed
 
 ---
 
-## Step 8 — Generate Character Images (Gemini CLI prompt)
+## Step 8 — Generate Character Images (Antigravity CLI prompt)
 
 ```
 Generate lip sync images of Gophi, the Go gopher mascot. Both images should be of the same character, one with the mouth closed and one with the mouth open. The style is a high-quality digital illustration: clean, friendly, slightly chubby blue gopher with big bright eyes, wearing a tiny Botafogo football team jersey, looking directly forward at the camera. Head-and-shoulders portrait against a solid white background. Move the generated images to the static/images directory. Do not do anything else after moving the images.
@@ -168,7 +184,7 @@ go run .
 
 ---
 
-## Step 9 — Send Agent Traces to GCP Cloud Trace (Gemini CLI prompt)
+## Step 9 — Send Agent Traces to GCP Cloud Trace (Antigravity CLI prompt)
 
 ```
 Add OpenTelemetry tracing to the application so that agent traces are exported to GCP Cloud Trace.
