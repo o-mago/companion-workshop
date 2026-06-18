@@ -204,35 +204,27 @@ go run .
 
 ---
 
-## Step 9 — Send Agent Traces to GCP Cloud Trace (Antigravity CLI prompt)
+## Step 9 — Send Agent Traces to GCP Cloud Trace (Antigravity CLI `/goal`)
+
+Unlike the previous steps, here we hand the agent a high-level **goal** and let it
+plan and execute the steps on its own. In the Antigravity CLI, use the `/goal` command:
 
 ```
-Add OpenTelemetry tracing to the application so that agent traces are exported to GCP Cloud Trace.
+/goal Export this Go agent's traces to GCP Cloud Trace using OpenTelemetry.
 
-Follow these steps exactly:
-
-1. Add the Cloud Trace exporter package:
-   go get github.com/GoogleCloudPlatform/opentelemetry-operations-go/exporter/trace
-
-2. In main.go, add a new function called initTracer that:
-   - Imports:
-       cloudtrace "github.com/GoogleCloudPlatform/opentelemetry-operations-go/exporter/trace"
-       "go.opentelemetry.io/otel"
-       "go.opentelemetry.io/otel/sdk/resource"
-       sdktrace "go.opentelemetry.io/otel/sdk/trace"
-       semconv "go.opentelemetry.io/otel/semconv/v1.26.0"
-   - Creates a Cloud Trace exporter using cloudtrace.New() with no options (it will use ADC automatically)
-   - Creates a TracerProvider with:
-       - The Cloud Trace exporter as a BatchSpanProcessor
-       - A Resource with service.name set to the appName constant
-   - Registers the provider globally with otel.SetTracerProvider
-   - Returns a shutdown function (func()) and an error
-   - Use the env var PROJECT_ID for the cloudtrace exporter if needed.
-
-3. In the main() function, call initTracer() right after creating the context, before anything else. If it returns an error, log.Fatal it. Defer the shutdown function.
-
-4. Run go build . to confirm there are no syntax errors.
+Outcome:
+- The running app exports agent traces to GCP Cloud Trace.
+- Tracing is wired up in main.go and initialized before the agent runs.
+- The exporter authenticates via Application Default Credentials (ADC) and uses
+  the PROJECT_ID environment variable when needed.
+- The TracerProvider tags spans with the service name (the appName constant) and
+  shuts down cleanly when the app exits.
+- The project still builds (go build .).
 ```
+
+> **Note:** With `/goal` the agent decides which packages to add and how to structure
+> `initTracer` — the exact code may differ between runs. If you need a deterministic,
+> reproducible result for a live demo, use a step-by-step imperative prompt instead.
 
 Restart the app:
 
