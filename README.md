@@ -1,3 +1,23 @@
+# Companion Workshop
+
+A hands-on workshop that walks you, step by step, through building a conversational AI agent in Go. The result is a web app where you chat with **Gophi**, an animated gopher mascot with lip-sync. Across the steps, the agent gains a personality, gets access to Google Search, generates its own images through an MCP server, and starts exporting traces to GCP Cloud Trace.
+
+The build is driven by prompts run in the **Antigravity CLI**, showcasing an AI-assisted development workflow.
+
+## Tools used
+
+- **Go 1.26** — the application language (HTTP server and agent logic).
+- **Google ADK (Agent Development Kit) for Go** — framework for building and running the agent.
+- **Gemini (`gemini-2.5-flash`)** via Google AI Studio — the agent's language model.
+- **Google Search tool** — Gemini's native tool for web searches.
+- **MCP (Model Context Protocol)** — integration with the [nano-banana-mcp](https://github.com/o-mago/nano-banana-mcp) server for image generation.
+- **Antigravity CLI (`agy`)** — the AI assistant used to generate and edit the code during the workshop.
+- **OpenTelemetry + GCP Cloud Trace** — exporting agent traces for observability.
+- **Slidev** — the workshop's slide deck (`slides/`).
+- **gcloud CLI** — Google Cloud authentication and credential setup.
+
+---
+
 ## Step 0 — Run the Slides
 
 The workshop slides live in the `slides/` directory (built with [Slidev](https://sli.dev/)).
