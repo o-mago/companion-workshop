@@ -4,6 +4,8 @@ A hands-on workshop that walks you, step by step, through building a conversatio
 
 The build is driven by prompts run in the **Antigravity CLI**, showcasing an AI-assisted development workflow.
 
+> Google Cloud credits are provided for this project. #AgenticArchitect #GoogleAntigravity
+
 ## Tools used
 
 - **Go 1.26** — the application language (HTTP server and agent logic).
